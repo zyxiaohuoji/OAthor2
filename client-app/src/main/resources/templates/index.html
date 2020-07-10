@@ -3,12 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>江南一点雨</title>
-    <script src="../static/jquery-3.5.0.min.js"></script>
 </head>
 <body>
 <h1 th:text="${msg}"></h1>
 你好，江南一点雨！
 <a href="http://localhost:8080/oauth/authorize?client_id=javaboy&response_type=code&scope=all&redirect_uri=http://localhost:8082/index.html">第三方登录（授权模式）</a>
 
+<form action="/login" method="post">
+    <table>
+        <tr>
+            <td>用户名：</td>
+            <td><input name="username"></td>
+        </tr>
+        <tr>
+            <td>密码：</td>
+            <td><input name="password"></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="登录"></td>
+        </tr>
+    </table>
+</form>
+<h1 th:text="${msg}"></h1>
 </body>
 </html>

@@ -4,6 +4,8 @@ package com.ccs.authserver.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -31,6 +33,9 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    AuthenticationManager authenticationManager;    //password 模式需添加
+
     @Bean
     AuthorizationServerTokenServices tokenServices(){
         DefaultTokenServices services = new DefaultTokenServices();
@@ -55,17 +60,19 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 .withClient("javaboy")
                 .secret(passwordEncoder.encode("123"))
                 .resourceIds("res1")
-                .authorizedGrantTypes("authorization_code", "refresh_token", "implicit")
+                .authorizedGrantTypes("authorization_code", "refresh_token", "implicit", "password")
                 .scopes("all")
                 .autoApprove(true)
 //                .redirectUris("http://localhost:8082/index.html");    //授权服务模式 测试
-                .redirectUris("http://localhost:8082/01.html");    //客户模式 测试
+                .redirectUris("http://localhost:8082/01.html", "http://localhost:8082/index.html");    //客户模式 测试
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 //      端点配置
-        endpoints.authorizationCodeServices(authorizationCodeServices())
+        endpoints
+                .authenticationManager(authenticationManager)
+                .authorizationCodeServices(authorizationCodeServices())
                 .tokenServices(tokenServices());
     }
 
