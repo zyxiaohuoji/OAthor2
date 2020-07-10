@@ -9,6 +9,9 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 @Configuration
 public class AccessTokenConfig {
 
+
+//    RedisConnection
+
     @Bean
     TokenStore tokenStore() {
         return new InMemoryTokenStore();
